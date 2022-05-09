@@ -13,24 +13,24 @@
 # It can be obtained by running `docker inspect repo/imagename:tag@digest` or from
 # https://github.com/jupyter/docker-stacks/wiki
 
-ARG BASE_VERSION=9ed3b8de5de1
-FROM jupyter/datascience-notebook:$BASE_VERSION
+FROM apache/zeppelin:latest
 
 USER root
 
 ENV PATH="/home/jovyan/.local/bin/:${PATH}"
 
-# RUN apt-get update --yes && rm -rf /var/lib/apt/lists/*
+RUN apt-get update --yes \
+    && apt-get install --yes language-pack-fr \
+    && rm -rf /var/lib/apt/lists/*
 
-# These headers are needed for building some of the coin-or components
-# They are empty and so is life.
 RUN mkdir -p /usr/include/mysql \
     && touch /usr/include/mysql/my_global.h \
     && touch /usr/include/mysql/my_sys.h
 
+
+
 RUN apt-get update \
     && apt-get -y install --no-install-recommends \
-    language-pack-fr \
     build-essential \
     ca-certificates \
     cmake \
@@ -149,7 +149,6 @@ RUN python3 -m pip --no-cache-dir install --user --upgrade \
     PuLP \
     simpy \
     jupyterlab
-
 # Python is downgraded because of ml-metadata
 RUN conda install -c conda-forge python=3.8.12 -y && \
   fix-permissions $CONDA_DIR && \
