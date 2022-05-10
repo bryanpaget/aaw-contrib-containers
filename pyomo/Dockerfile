@@ -28,6 +28,9 @@ RUN mkdir -p /usr/include/mysql \
     && touch /usr/include/mysql/my_global.h \
     && touch /usr/include/mysql/my_sys.h
 
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update -y && apt-get -y upgrade
+
 RUN apt-get update \
     && apt-get -y install --no-install-recommends \
     language-pack-fr \
